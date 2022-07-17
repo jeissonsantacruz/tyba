@@ -60,7 +60,7 @@ class BuildList extends StatelessWidget {
   }
 }
 
-//Show a custom card with image of book , title book and  option to save a book
+//Show a custom card with image of book , title book and  option to go external detail
 class CustomCardBook extends StatelessWidget {
   final Book book;
   final bloc.BookBloc blocProvider;

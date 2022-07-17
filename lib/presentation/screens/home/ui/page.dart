@@ -8,7 +8,7 @@ import 'package:tyba/presentation/screens/home/ui/filter_buttons.dart';
 import 'package:tyba/presentation/utils/constants.dart';
 import 'package:tyba/presentation/utils/widgets/loading_widget.dart';
 
-// Class that contains the  SingUp Screem
+// Class that contains the books Screem
 class BooksPage extends StatefulWidget {
   const BooksPage({Key? key}) : super(key: key);
 
@@ -21,9 +21,7 @@ class _BooksPageState extends State<BooksPage> {
   @override
   void initState() {
     blocProvider.stream.listen((state) {
-      if (state is bloc.ErrorState) {
-        Navigator.pop(context);
-      }
+      if (state is bloc.ErrorState) {}
 
       if (state is bloc.LoadingDetailState) {
         LoadingWidget.show(context);
