@@ -1,4 +1,4 @@
-# Aplicaci{on de libros Tyba
+# Aplicación de libros Tyba
 
 _Prueba que contiene una aplicación de libros, utilizando openLibraryApi_
 
