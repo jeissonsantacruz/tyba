@@ -5,6 +5,7 @@ import 'package:meta/meta.dart';
 import 'package:tyba/data/models/home/book.dart';
 import 'package:tyba/domain/use_cases/books_use_case.dart';
 import 'package:tyba/domain/use_cases/filter_use_case.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 part 'event.dart';
 part 'state.dart';
@@ -32,6 +33,8 @@ class BookBloc extends bloc.Bloc<Event, State> {
       yield* _searchEvent(event);
     } else if (event is SelectFilterEvent) {
       yield* _selectFilterEvent(event);
+    } else if (event is ExternalDetailBookEvent) {
+      yield* _externalDetailBook(event);
     }
   }
 
@@ -41,7 +44,8 @@ class BookBloc extends bloc.Bloc<Event, State> {
       yield LoadingState(state.model);
       final String? filter = await filterUseCase.getFilter();
 
-      final books = await booksUseCase.getBooks('', state.model.filter);
+      final books =
+          await booksUseCase.getBooks(state.model.search, state.model.filter);
       yield LoadedState(
         state.model.copyWith(books: books, filter: filter ?? 'q'),
       );
@@ -81,6 +85,7 @@ class BookBloc extends bloc.Bloc<Event, State> {
       }
       yield OnChangedState(
         state.model.copyWith(
+          search: event.search,
           books: books,
         ),
       );
@@ -92,7 +97,7 @@ class BookBloc extends bloc.Bloc<Event, State> {
     }
   }
 
-  // Stream that get the detail of book
+  // Stream that set a filter
   Stream<State> _selectFilterEvent(SelectFilterEvent event) async* {
     try {
       await filterUseCase.setFilter(event.filter);
@@ -105,5 +110,27 @@ class BookBloc extends bloc.Bloc<Event, State> {
         error: error.toString(),
       );
     }
+  }
+
+  Stream<State> _externalDetailBook(ExternalDetailBookEvent event) async* {
+    try {
+      yield LoadingState(state.model);
+      _launchURL(event.search);
+      yield LoadedState(state.model);
+    } catch (error) {
+      yield ErrorState(
+        state.model,
+        error: error.toString(),
+      );
+    }
+  }
+
+  /// Method to launch the external detail book
+  Future<void> _launchURL(String search) async {
+    final Uri _url = Uri.parse('https://www.google.com/search?q=$search');
+
+    await canLaunchUrl(_url)
+        ? await launchUrl(_url)
+        : throw 'Could not launch $_url';
   }
 }

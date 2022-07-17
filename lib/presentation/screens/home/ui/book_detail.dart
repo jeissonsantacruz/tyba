@@ -2,19 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tyba/data/models/home/book.dart';
 import 'package:tyba/presentation/screens/home/bloc/bloc.dart' as bloc;
+import 'package:tyba/presentation/utils/constants.dart';
 
 // Class that contains the book detail
-class Detail extends StatefulWidget {
+class DetailPage extends StatefulWidget {
   final Book book;
   final bloc.BookBloc blocProvider;
 
-  const Detail(this.book, this.blocProvider);
+  const DetailPage(this.book, this.blocProvider, {Key? key}) : super(key: key);
 
   @override
   _DetailState createState() => _DetailState();
 }
 
-class _DetailState extends State<Detail> {
+class _DetailState extends State<DetailPage> {
   @override
   void initState() {
     widget.blocProvider.add(
@@ -33,22 +34,30 @@ class _DetailState extends State<Detail> {
         return Scaffold(
           backgroundColor: Colors.black,
           appBar: AppBar(
-            title: Text(widget.book.title ?? ""),
-          ),
+              backgroundColor: Colors.black,
+              title: Text(
+                widget.book.title ?? kEmptyString,
+                style: const TextStyle(color: Colors.white),
+              ),
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back),
+                color: Colors.white,
+                onPressed: () => Navigator.of(context).pop(),
+              )),
           body: Column(
             children: <Widget>[
               Flexible(
                 flex: 8,
                 child: Container(
                   height: size.height * 0.6,
-                  padding: EdgeInsets.only(top: 70, right: 20, left: 20),
+                  padding: const EdgeInsets.only(top: 70, right: 20, left: 20),
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       colorFilter: ColorFilter.mode(
                           Colors.black.withOpacity(0.2), BlendMode.dstATop),
                       fit: BoxFit.cover,
                       image: NetworkImage(
-                        'https://covers.openlibrary.org/b/id/' +
+                        kOpenLibraryImage +
                             (widget.book.coverI).toString() +
                             '-L.jpg',
                       ),
@@ -71,11 +80,12 @@ class _DetailState extends State<Detail> {
               ),
               Flexible(
                 flex: 3,
-                child: descriptionBook(state.model.detail ?? "", size),
+                child:
+                    descriptionBook(state.model.detail ?? kEmptyString, size),
               ),
               Flexible(
                 flex: 1,
-                child: saveButtonBook(),
+                child: goExternalDetail(),
               )
             ],
           ),
@@ -94,9 +104,7 @@ class _DetailState extends State<Detail> {
           elevation: 15.0,
           shadowColor: Colors.white,
           child: Image.network(
-            'https://covers.openlibrary.org/b/id/' +
-                (widget.book.coverI).toString() +
-                '-L.jpg',
+            kOpenLibraryImage + (widget.book.coverI).toString() + '-L.jpg',
             fit: BoxFit.cover,
             height: 200,
           ),
@@ -108,7 +116,7 @@ class _DetailState extends State<Detail> {
 
   Widget titleBook() {
     return Text(
-      widget.book.title ?? "",
+      widget.book.title ?? kEmptyString,
       style: TextStyle(
         fontSize: 16,
         color: Colors.white,
@@ -118,7 +126,7 @@ class _DetailState extends State<Detail> {
             color: Colors.red.withOpacity(0.5),
             spreadRadius: 5,
             blurRadius: 7,
-            offset: Offset(0, 3),
+            offset: const Offset(0, 3),
           ),
         ],
       ),
@@ -178,18 +186,19 @@ class _DetailState extends State<Detail> {
   }
 
   // Show the botton for save a book
-  Widget saveButtonBook() {
+  Widget goExternalDetail() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 70),
       child: ElevatedButton(
         child: const ListTile(
-          title: Text('Guardar libro'),
+          title: Text('Detalle en la Web'),
           leading: Icon(Icons.bookmark_border),
         ),
         onPressed: () {
-          // widget.blocProvider.add(
-          //   bloc.SaveBookEvent(book: widget.book),
-          // );
+          widget.blocProvider.add(
+            bloc.ExternalDetailBookEvent(
+                search: widget.book.title ?? kEmptyString),
+          );
         },
       ),
     );

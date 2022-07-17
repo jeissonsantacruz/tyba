@@ -1,6 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FilterLocalDataSource {
+  /// Method to save a filter to the local data
   Future<bool> saveFilter(String filter) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -11,6 +12,7 @@ class FilterLocalDataSource {
     }
   }
 
+  /// Method to get a filter to the local data
   Future<String?> getFilter() async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();

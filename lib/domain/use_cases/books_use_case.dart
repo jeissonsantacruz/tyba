@@ -1,6 +1,7 @@
 import 'package:tyba/data/models/home/book.dart';
 import 'package:tyba/domain/repositories/home_repositorie/book_repository.dart';
 
+/// Class that contains use cases specif with books
 class BooksUseCase {
   final BooksRepository _registerRepository;
 

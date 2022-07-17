@@ -64,17 +64,18 @@ class FailureDownloadingState extends State {
   List<Object> get props => [error, model];
 }
 
+/// Dta model that contains all data of bloc
 class Model extends Equatable {
   final List<Book>? books;
   final String? detail;
-  final String? search;
+  final String search;
   final String filter;
 
   const Model(
       {this.books,
       this.detail = 'No hay descripción para este libro :(',
       this.filter = 'q',
-      this.search});
+      this.search = ''});
 
   Model copyWith(
           {List<Book>? books,

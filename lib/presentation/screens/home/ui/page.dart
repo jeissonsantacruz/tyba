@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:tyba/data/models/home/book.dart';
 import 'package:tyba/presentation/screens/home/bloc/bloc.dart' as bloc;
 import 'package:tyba/presentation/screens/home/ui/book_list.dart';
@@ -41,51 +42,77 @@ class _BooksPageState extends State<BooksPage> {
       bloc: blocProvider,
       builder: (context, state) {
         return Scaffold(
-          backgroundColor: Colors.black,
-          appBar: AppBar(
-            title: const Center(
-              child: Text(
-                'Libros',
-                style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.8),
-              ),
-            ),
-            backgroundColor: kPrimaryColor,
-          ),
+          backgroundColor: Colors.white,
           body: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const SizedBox(
-                height: 50,
-              ),
-              TextField(
-                key: Key('Search'),
-                onSubmitted: (value) {
-                  blocProvider.add(
-                    bloc.ChangeEvent(search: value),
-                  );
-                },
-                style: const TextStyle(color: Colors.white),
-                decoration: const InputDecoration(
-                  hintStyle: TextStyle(color: Colors.white),
-                  hintText: "Buscar",
-                  filled: true,
-                  fillColor: Color(0XFF2A2D37),
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: Colors.white,
+              Container(
+                padding: const EdgeInsets.only(top: 56, left: 16, right: 16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: const BorderRadius.only(
+                    bottomRight: Radius.circular(40),
                   ),
-                  border: UnderlineInputBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(25.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.2),
+                      spreadRadius: 8,
+                      blurRadius: 12,
+                      offset: const Offset(0, 3),
                     ),
-                  ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextField(
+                      onSubmitted: (value) {
+                        blocProvider.add(
+                          bloc.ChangeEvent(search: value),
+                        );
+                      },
+                      style: const TextStyle(color: Colors.black),
+                      decoration: const InputDecoration(
+                        hintStyle: TextStyle(color: Colors.black),
+                        hintText: kSearch,
+                        filled: true,
+                        prefixIcon: Icon(
+                          Icons.search,
+                          color: Colors.black,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          borderSide: BorderSide(color: kBlueyGrey, width: 0),
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          borderSide: BorderSide(color: kBlueyGrey, width: 0),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          borderSide: BorderSide(color: kBlueyGrey),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    Text(
+                      kDiscoverBooks,
+                      style: GoogleFonts.catamaran(
+                        fontWeight: FontWeight.w900,
+                        fontSize: 40,
+                        height: 1,
+                      ),
+                    ),
+                    FilterButtonsWidget(
+                      blocProvider: blocProvider,
+                    ),
+                  ],
                 ),
               ),
-              FilterButtonsWidget(
-                blocProvider: blocProvider,
+              const SizedBox(
+                height: 50,
               ),
               Expanded(
                 child: RefreshIndicator(
